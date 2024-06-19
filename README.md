@@ -1,21 +1,18 @@
-# KumdorFont
+# Sword of Kumdor Latin Font
 
-**TODO: Add description**
+This is an extracted version of the 8x16 pixel latin font included in the 1991 touch-typing RPG “The Sword of Kumdor” (クムドールの剣).
 
-## Installation
+More information about the game, including screenshots of the font [can be found here](https://lynn.github.io/kumdor/).
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `kumdor_font` to your list of dependencies in `mix.exs`:
+Thanks to [Lynn](https://github.com/lynn) for publishing this excellent page which brought my attention to the game and the font, and also for answering my questions about the ROM's format.
 
-```elixir
-def deps do
-  [
-    {:kumdor_font, "~> 0.1.0"}
-  ]
-end
+## Run Font Extraction
+
+```sh
+# Elixir 1.16.3
+mix deps.get
+mix extract_font <path_to_rom>
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/kumdor_font>.
+Each character is written to a PNG in `/output` named after its (decimal) index in the ASCII table.
 
