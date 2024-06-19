@@ -1,3 +1,5 @@
+<!-- livebook:{"persist_outputs":true} -->
+
 # Playground
 
 ```elixir
@@ -50,13 +52,43 @@ byte_rows = for <<r::8 <- character_section>>, do: <<r>>
 byte_rows
 |> Enum.each(fn row ->
   for <<b::1 <- row>> do
-    b
+    case b do
+      0 -> "░"
+      1 -> "█"
+    end
   end
   |> Enum.join()
   |> IO.inspect()
 end)
 
 # the output is the individual bits representing the 'A' character
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"░░░░░░░░"
+"░░░░░░░░"
+"░░░░█░░░"
+"░░░█░█░░"
+"░░░█░█░░"
+"░░░█░█░░"
+"░░█░░░█░"
+"░░█░░░█░"
+"░░█░░░█░"
+"░░█████░"
+"░█░░░░░█"
+"░█░░░░░█"
+"░█░░░░░█"
+"░█░░░░░█"
+"░░░░░░░░"
+"░░░░░░░░"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
 ```
 
 ## Extracting to Image
@@ -88,9 +120,34 @@ end)
 |> Evision.Mat.from_binary({:u, 8}, 16, 8, 1)
 ```
 
-```elixir
-# Cleaned up version of that, as part of the lib
-{_idx, character_section} = Enum.at(chunks, 0x25)
+<!-- livebook:{"output":true} -->
 
+```
+%Evision.Mat{
+  channels: 1,
+  dims: 2,
+  type: {:u, 8},
+  raw_type: 0,
+  shape: {16, 8},
+  ref: #Reference<0.1903044083.1179516952.177714>
+}
+```
+
+```elixir
+# Cleaned up version of the above cell
+{_idx, character_section} = Enum.at(chunks, 0x25)
 KumdorFont.character_to_mat(character_section)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%Evision.Mat{
+  channels: 1,
+  dims: 2,
+  type: {:u, 8},
+  raw_type: 0,
+  shape: {16, 8},
+  ref: #Reference<0.1903044083.1179516952.177717>
+}
 ```
