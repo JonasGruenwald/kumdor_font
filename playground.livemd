@@ -1,0 +1,96 @@
+# Playground
+
+```elixir
+project_path = Path.absname(__DIR__)
+
+Mix.install([
+  {:evision, "~> 0.2"},
+  {:kumdor_font, path: __DIR__},
+  {:kino, "~> 0.13.0"}
+])
+
+Mix.install_project_dir()
+
+# I have the repo https://github.com/lynn/kumdor cloned
+# in an adjascent path
+rom_path =
+  Path.join([project_path, "..", "kumdor", "saved.hdm"])
+  |> Path.expand()
+```
+
+## Reading the Binary
+
+In this section I am just experimenting with how to read the font data from the binary.
+
+From: https://github.com/lynn/kumdor/blob/master/patch.py
+
+```python
+# Use a nicer apostrophe glyph:
+font_data = rom[0x12000:0x12800]
+apostrophe = rom[0x12270:0x12280]
+write(0x12270, b"\0\0\0\x18\x18\x08\x10\0\0\0\0\0\0\0\0\0")
+```
+
+Each character is 0x10 = 16 bytes, where each byte is a row of the character. The apostrophe is 0x27 in ASCII, so it starts at 0x12270 in the ROM.
+
+```elixir
+# I'm using this version of the rom: 
+# https://github.com/lynn/kumdor/blob/master/saved.hdm
+data = File.read!(rom_path)
+
+# Match the part of the binary that contains the font data
+<<_::binary-size(0x12000), font_section::binary-size(0x800), _::binary>> = data
+
+# Match the character A (capital), which is 0x41 in ASCII
+<<_::binary-size(0x41 * 0x10), character_section::binary-size(0x10), _::binary>> = font_section
+
+byte_rows = for <<r::8 <- character_section>>, do: <<r>>
+
+# log byte rows as they are
+byte_rows
+|> Enum.each(fn row ->
+  for <<b::1 <- row>> do
+    b
+  end
+  |> Enum.join()
+  |> IO.inspect()
+end)
+
+# the output is the individual bits representing the 'A' character
+```
+
+## Extracting to Image
+
+In this section I'm experimenting with how to turn the extracted font data into an image that can be saved to disk.
+
+I'm using OpenCV since it's the most straightforward way I can possibly think of in Elixir, although it seems a bit overkill.
+
+```elixir
+# Try to get the binary data into the format OpenCV can work with
+chunks = KumdorFont.get_character_table(data)
+{_idx, character_section} = Enum.at(chunks, 0x41)
+
+for <<r::8 <- character_section>> do
+  <<r>>
+end
+|> Enum.map(fn row ->
+  for <<b::1 <- row>> do
+    case b do
+      0 -> <<255>>
+      1 -> <<0>>
+    end
+  end
+end)
+|> List.flatten()
+|> Enum.reduce(fn i, acc ->
+  acc <> i
+end)
+|> Evision.Mat.from_binary({:u, 8}, 16, 8, 1)
+```
+
+```elixir
+# Cleaned up version of that, as part of the lib
+{_idx, character_section} = Enum.at(chunks, 0x25)
+
+KumdorFont.character_to_mat(character_section)
+```
