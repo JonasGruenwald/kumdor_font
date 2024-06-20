@@ -1,12 +1,6 @@
 # Sword of Kumdor Latin Font
 
-<div>
-<img 
-style="image-rendering: pixelated;image-rendering: -moz-crisp-edges;image-rendering: crisp-edges;"
-src="./output/kumdor_latin_grid.bmp" 
-width="336px">
-</div>
-  
+![Pixel grid of the typeface](output/kumdor_latin_grid_upscaled.png)
   
 This is an extracted version of the 8x16 pixel latin font included in the 1991 touch-typing RPG “The Sword of Kumdor” (クムドールの剣).
 
