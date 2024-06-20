@@ -2,7 +2,7 @@
 
 <div>
 <img 
-style="image-rendering: pixelated;"
+style="image-rendering: pixelated;image-rendering: -moz-crisp-edges;image-rendering: crisp-edges;"
 src="./output/kumdor_latin_grid.bmp" 
 width="336px">
 </div>
