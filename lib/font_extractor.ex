@@ -1,4 +1,4 @@
-defmodule KumdorFont do
+defmodule FontExtractor do
   alias Evision.Mat
 
   @moduledoc """
