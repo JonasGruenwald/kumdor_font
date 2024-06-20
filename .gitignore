@@ -27,4 +27,6 @@ kumdor_font-*.tar
 
 .DS_Store
 
+# External tools I'm cloning right into the project
 font-problems
+mkttf

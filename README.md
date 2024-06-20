@@ -49,3 +49,15 @@ npm i && npm run build
 ./bin/font-problems ../output/kumdor_latin.bdf ../output/kumdor_latin_grid.bmp
 ```
 
+There is this tool to generate outlines for a BDF bitmap font by tracing the file with potrace:
+
+https://github.com/tblue/mkttf?tab=readme-ov-file
+
+```sh
+git clone git clone https://github.com/Tblue/mkttf.git
+cd mkttf
+# convert to ttf outline font
+python3 mkttf.py ../output/kumdor_latin.bdf
+```
+
+I've placed the output of the tool in `output/kumdor_latin_traced.ttf`, keep in mind it's not really properly spaced / kerned
